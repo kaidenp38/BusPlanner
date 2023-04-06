@@ -1,7 +1,7 @@
 
 #include "BusProperties.h"
 
-
+//E.L book seat function
 void book_seat(Reservation reservations[], int bus_id) {
     int i;
     for (i = 0; i < MAX_SEATS; i++) {
