@@ -13,5 +13,6 @@ int main() {
     save_reservation(reservation);
     confirm_reservation(reservation);
     display_reservation_details(reservation);
+    relocate_user(reservations);
     return 0;
 }

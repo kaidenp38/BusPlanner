@@ -9,6 +9,7 @@
 typedef struct {
     int bus_id;
     int seat_number;
+    int is_confirmed;
     char name[50];
     char phone_number[20];
     char ticket_id[10];
@@ -22,3 +23,4 @@ void get_user_input(char name[], char phone_number[]);
 Reservation create_reservation(int bus_choice, char name[], char phone_number[], Reservation reservations[]);
 void confirm_reservation(Reservation reservation);
 void display_reservation_details(Reservation reservation);
+void relocate_user(Reservation* reservations);
