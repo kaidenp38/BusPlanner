@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_SEATS 50
+#define MAX_SEATS 20
 
 typedef struct {
     int bus_id;
