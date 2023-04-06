@@ -15,12 +15,13 @@ typedef struct {
     char ticket_id[10];
 } Reservation;
 
-void book_seat(Reservation reservations[], int bus_id);
+void book_seat(Reservation reservations[], int bus_id, int seat_number);
 void generate_ticket_id(char ticket_id[]);
 void save_reservation(Reservation reservation);
 int get_bus_choice();
+int get_seat_choice();
 void get_user_input(char name[], char phone_number[]);
-Reservation create_reservation(int bus_choice, char name[], char phone_number[], Reservation reservations[]);
+Reservation create_reservation(int bus_choice,int seat_choice, char name[], char phone_number[], Reservation reservations[]);
 void confirm_reservation(Reservation reservation);
 void display_reservation_details(Reservation reservation);
 void relocate_user(Reservation* reservations);

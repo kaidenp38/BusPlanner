@@ -20,8 +20,12 @@ int main() {
         if (bus_choice == 0) {
             return 1;
         }
+        int seat_choice = get_seat_choice(bus_choice, reservations);
+        if (seat_choice == 0) {
+            return 1;
+        }
         get_user_input(name, phone_number);
-        Reservation reservation = create_reservation(bus_choice, name, phone_number, reservations);
+        Reservation reservation = create_reservation(bus_choice, seat_choice, name, phone_number, reservations);
         save_reservation(reservation);
         confirm_reservation(reservation);
         display_reservation_details(reservation);
