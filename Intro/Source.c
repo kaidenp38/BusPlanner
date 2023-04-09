@@ -8,7 +8,6 @@ int main() {
     while (programLoop)
     {
         Reservation reservations[MAX_SEATS] = { 0 };
-        char name[50], phone_number[20];
         int menuChoice;
         printf("Welcome to the bus planner program\n");
         printf("select the option that applys to what you want to do.\n");
@@ -24,12 +23,11 @@ int main() {
             if (bus_choice == 0) {
                 return 1;
             }
-            int seat_choice = get_seat_choice(bus_choice, reservations);
-            if (seat_choice == 0) {
+            Reservation reservation = create_reservation(bus_choice,reservations);
+            if (reservation.bus_id == 0) {
+                printf("Reservation unsuccessful.\n");
                 return 1;
             }
-            get_user_input(name, phone_number);
-            Reservation reservation = create_reservation(bus_choice, seat_choice, name, phone_number, reservations);
             save_reservation(reservation);
             confirm_reservation(reservation);
             display_reservation_details(reservation);

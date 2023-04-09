@@ -1,4 +1,4 @@
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "BusProperties.h"
 
 //E.L book seat function
@@ -66,44 +66,76 @@ void get_user_input(char name[], char phone_number[]) {
     scanf("%s", phone_number);
 }
 
+// checks reservation
+int check_seat_reservation(int bus_id, int seat_number, Reservation reservations[]) {
+    if (reservations[seat_number - 1].bus_id == bus_id) {
+        printf("Seat already reserved for this bus.\n");
+        return 1;
+    }
+    else if (reservations[seat_number - 1].bus_id != 0) {
+        printf("Seat already reserved for another bus.\n");
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 // E.L create reservation function
-Reservation create_reservation(int bus_choice, char* name, char* phone_number, Reservation* reservations) {
-    Reservation reservation = {
-        .bus_id = bus_choice,
-    };
-    int i, seat_number;
-    printf("Enter 0 to choose a seat or 1 to have a random one assigned: ");
-    scanf("%d", &seat_number);
-    if (seat_number == 0) {
-        printf("Enter desired seat number: ");
-        scanf("%d", &seat_number);
-        if (seat_number < 1 || seat_number > MAX_SEATS) {
-            printf("Error: Invalid seat number.\n");
-            Reservation dummy_reservation = { 0 };
-            return dummy_reservation;
+Reservation create_reservation(int bus_choice, Reservation reservations[]) {
+    int seat_choice = 0;
+    char name[50], phone_number[20];
+
+    printf("Do you want to choose a specific seat (1) or get a random seat (2)? ");
+    int choice;
+    scanf("%d", &choice);
+    if (choice == 1) {
+        seat_choice = get_seat_choice();
+        if (check_seat_reservation(bus_choice, seat_choice, reservations)) {
+            printf("Seat already booked, please choose another one.\n");
+            return create_reservation(bus_choice, reservations);
         }
-        if (reservations[seat_number - 1].seat_number != 0) {
-            printf("Error: Seat is already taken.\n");
-            Reservation dummy_reservation = { 0 };
-            return dummy_reservation;
+    }
+    else if (choice == 2) {
+        // randomly choose an available seat
+        int num_available = 0;
+        for (int i = 0; i < MAX_SEATS; i++) {
+            if (reservations[i].bus_id == 0) {
+                num_available++;
+            }
+        }
+        if (num_available == 0) {
+            printf("Sorry, no seats available on this bus.\n");
+            return (Reservation) { 0 };
+        }
+        int rand_seat = rand() % num_available + 1;
+        for (int i = 0; i < MAX_SEATS; i++) {
+            if (reservations[i].bus_id == 0) {
+                rand_seat--;
+                if (rand_seat == 0) {
+                    seat_choice = i + 1;
+                    break;
+                }
+            }
         }
     }
     else {
-        srand(time(NULL));
-        do {
-            seat_number = rand() % MAX_SEATS + 1;
-        } while (reservations[seat_number - 1].seat_number != 0);
-        printf("Random seat number assigned: %d\n", seat_number);
+        printf("Invalid choice, please try again.\n");
+        return create_reservation(bus_choice, reservations);
     }
-    reservation.seat_number = seat_number;
+
+    get_user_input(name, phone_number);
+
+    Reservation reservation = {
+        .bus_id = bus_choice,
+        .seat_number = seat_choice,
+    };
+    book_seat(reservations, bus_choice, seat_choice);
+    save_reservation(reservation);
     generate_ticket_id(reservation.ticket_id);
     strcpy(reservation.name, name);
-    strcpy(reservation.phone_number, *phone_number);
-    confirm_reservation(reservation);
-    display_reservation_details(reservation);
-    reservations[seat_number - 1] = reservation;
+    strcpy(reservation.phone_number, phone_number);
     return reservation;
-
 }
 
 
