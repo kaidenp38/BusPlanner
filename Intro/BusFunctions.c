@@ -1,16 +1,10 @@
 
 #include "BusProperties.h"
 
-
-void book_seat(Reservation reservations[], int bus_id) {
-    int i;
-    for (i = 0; i < MAX_SEATS; i++) {
-        if (reservations[i].bus_id == 0) {
-            reservations[i].bus_id = bus_id;
-            reservations[i].seat_number = i + 1;
-            break;
-        }
-    }
+//E.L book seat function
+void book_seat(Reservation reservations[], int bus_id, int seat_number) {
+    reservations[seat_number - 1].bus_id = bus_id;
+    reservations[seat_number - 1].seat_number = seat_number;
 }
 
 // E.L ticket id function
@@ -22,6 +16,17 @@ void generate_ticket_id(char ticket_id[]) {
         ticket_id[i] = charset[rand() % 36];
     }
     ticket_id[i] = '\0';
+}
+
+int get_seat_choice() {
+    int seat_choice;
+    printf("Please select a seat number (1-%d): ", MAX_SEATS);
+    scanf("%d", &seat_choice);
+    if (seat_choice < 1 || seat_choice > MAX_SEATS) {
+        printf("Invalid choice, please try again\n");
+        return 0;
+    }
+    return seat_choice;
 }
 
 //E.L save reservation function
@@ -62,14 +67,15 @@ void get_user_input(char name[], char phone_number[]) {
 }
 
 // E.L create reservation function
-Reservation create_reservation(int bus_choice, char name[], char phone_number[], Reservation reservations[]) {
+Reservation create_reservation(int bus_choice, int seat_choice, char name[], char phone_number[], Reservation reservations[]) {
     Reservation reservation = {
         .bus_id = bus_choice,
     };
-    book_seat(reservations, bus_choice);
+    book_seat(reservations, bus_choice, seat_choice);
     generate_ticket_id(reservation.ticket_id);
     strcpy(reservation.name, name);
     strcpy(reservation.phone_number, phone_number);
+    reservation.seat_number = seat_choice;
     return reservation;
 }
 
@@ -81,11 +87,13 @@ void confirm_reservation(Reservation reservation) {
 }
 
 //E.L Display Reservationf Function
-void display_reservation_details(Reservation reservation) {
+void display_reservation_details(Reservation reservation)
+{
     printf("Name: %s\n", reservation.name);
     printf("Phone number: %s\n", reservation.phone_number);
     printf("Bus number: %d\n", reservation.bus_id);
-    printf("Ticket ID: %s\n", reservation.ticket_id);
+    printf("Seat number: %d\n", reservation.seat_number);
+    printf("Ticket ID: %s\n",reservation.ticket_id);
 }
 
 //A.N Relocate User Function
