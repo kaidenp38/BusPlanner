@@ -25,5 +25,6 @@ int check_seat_reservation(int bus_id, int seat_number, Reservation reservations
 Reservation create_reservation(int bus_choice, Reservation reservations[]);
 void confirm_reservation(Reservation reservation);
 void display_reservation_details(Reservation reservation);
-void relocate_user(Reservation* reservations);
+Reservation find_reservation(char ticket_id[]);
+//void relocate_user(Reservation* reservations);
 void cancel_reservation(Reservation reservation);

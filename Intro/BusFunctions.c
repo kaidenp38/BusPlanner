@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "BusProperties.h"
-
+#include <string.h>
 //E.L book seat function
 void book_seat(Reservation reservations[], int bus_id, int seat_number) {
     reservations[seat_number - 1].bus_id = bus_id;
@@ -157,50 +157,24 @@ void display_reservation_details(Reservation reservation)
 }
 
 //A.N Relocate User Function
-void relocate_user(Reservation* reservations) {
-    int from_seat, to_seat;
-    printf("Enter your current seat number: ");
-    scanf("%d", &from_seat);
-    printf("Enter the seat number you want to move to: ");
-    scanf("%d", &to_seat);
-    Reservation from_reservation = reservations[from_seat - 1];
-    Reservation to_reservation = reservations[to_seat - 1];
-    if (from_reservation.seat_number == 0 || to_reservation.seat_number != 0) {
-        printf("Error: Invalid seat numbers.\n");
-        return;
-    }
-    strcpy(to_reservation.name, from_reservation.name);
-    strcpy(to_reservation.phone_number, from_reservation.phone_number);
-    reservations[from_seat - 1].seat_number = 0;
-    to_reservation.seat_number = to_seat;
-    printf("Seat reservation successfully changed.\n");
-}
-
-//void cancel_reservation(int seat_number, Reservation* reservations) {
-//    if (seat_number < 1 || seat_number > MAX_SEATS) {
-//        printf("Error: Invalid seat number.\n");
+//void relocate_user(Reservation* reservations) {
+//    int from_seat, to_seat;
+//    printf("Enter your current seat number: ");
+//    scanf("%d", &from_seat);
+//    printf("Enter the seat number you want to move to: ");
+//    scanf("%d", &to_seat);
+//    Reservation from_reservation = reservations[from_seat - 1];
+//    Reservation to_reservation = reservations[to_seat - 1];
+//    if (from_reservation.seat_number == 0 || to_reservation.seat_number != 0) {
+//        printf("Error: Invalid seat numbers.\n");
 //        return;
 //    }
-//    Reservation reservation = reservations[seat_number - 1];
-//    if (reservation.seat_number == 0) {
-//        printf("Error: Seat is not reserved.\n");
-//        return;
-//    }
-//    printf("Are you sure you want to cancel the reservation for seat number %d? (Y/N): ", seat_number);
-//    char confirmation;
-//    scanf(" %c", &confirmation);
-//    if (confirmation == 'Y' || confirmation == 'y') {
-//        reservations[seat_number - 1].seat_number = 0;
-//        printf("Reservation for seat number %d has been cancelled.\n", seat_number);
-//    }
-//    else if (confirmation == 'N' || confirmation == 'n') {
-//        printf("Reservation for seat number %d has not been cancelled.\n", seat_number);
-//    }
-//    else {
-//        printf("Invalid input. Reservation for seat number %d has not been cancelled.\n", seat_number);
-//    }
+//    strcpy(to_reservation.name, from_reservation.name);
+//    strcpy(to_reservation.phone_number, from_reservation.phone_number);
+//    reservations[from_seat - 1].seat_number = 0;
+//    to_reservation.seat_number = to_seat;
+//    printf("Seat reservation successfully changed.\n");
 //}
-
 
 void cancel_reservation(Reservation reservation) {
     // Open the reservations file for reading and a temporary file for writing
