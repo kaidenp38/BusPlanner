@@ -176,27 +176,58 @@ void relocate_user(Reservation* reservations) {
     printf("Seat reservation successfully changed.\n");
 }
 
-void cancel_reservation(int seat_number, Reservation* reservations) {
-    if (seat_number < 1 || seat_number > MAX_SEATS) {
-        printf("Error: Invalid seat number.\n");
-        return;
+//void cancel_reservation(int seat_number, Reservation* reservations) {
+//    if (seat_number < 1 || seat_number > MAX_SEATS) {
+//        printf("Error: Invalid seat number.\n");
+//        return;
+//    }
+//    Reservation reservation = reservations[seat_number - 1];
+//    if (reservation.seat_number == 0) {
+//        printf("Error: Seat is not reserved.\n");
+//        return;
+//    }
+//    printf("Are you sure you want to cancel the reservation for seat number %d? (Y/N): ", seat_number);
+//    char confirmation;
+//    scanf(" %c", &confirmation);
+//    if (confirmation == 'Y' || confirmation == 'y') {
+//        reservations[seat_number - 1].seat_number = 0;
+//        printf("Reservation for seat number %d has been cancelled.\n", seat_number);
+//    }
+//    else if (confirmation == 'N' || confirmation == 'n') {
+//        printf("Reservation for seat number %d has not been cancelled.\n", seat_number);
+//    }
+//    else {
+//        printf("Invalid input. Reservation for seat number %d has not been cancelled.\n", seat_number);
+//    }
+//}
+
+
+void cancel_reservation(Reservation reservation) {
+    // Open the reservations file for reading and a temporary file for writing
+    FILE* fp = fopen("reservations.txt", "r");
+    FILE* temp = fopen("temp.txt", "w");
+
+    // Read each line of the reservations file and copy it to the temporary file, except for the reservation to be canceled
+    char line[200];
+    fgets(line, 200, fp); // read header line
+    fprintf(temp, "%s", line);
+    while (fgets(line, 200, fp) != NULL) {
+        int bus_id, seat_number;
+        char name[50], phone_number[20], ticket_id[10];
+        sscanf(line, "%d,%d,%[^,],%[^,],%s", &bus_id, &seat_number, name, phone_number, ticket_id);
+        if (bus_id == reservation.bus_id && seat_number == reservation.seat_number && strcmp(ticket_id, reservation.ticket_id) == 0) {
+            continue; // skip line if it matches the canceled reservation
+        }
+        fprintf(temp, "%s", line);
     }
-    Reservation reservation = reservations[seat_number - 1];
-    if (reservation.seat_number == 0) {
-        printf("Error: Seat is not reserved.\n");
-        return;
-    }
-    printf("Are you sure you want to cancel the reservation for seat number %d? (Y/N): ", seat_number);
-    char confirmation;
-    scanf(" %c", &confirmation);
-    if (confirmation == 'Y' || confirmation == 'y') {
-        reservations[seat_number - 1].seat_number = 0;
-        printf("Reservation for seat number %d has been cancelled.\n", seat_number);
-    }
-    else if (confirmation == 'N' || confirmation == 'n') {
-        printf("Reservation for seat number %d has not been cancelled.\n", seat_number);
-    }
-    else {
-        printf("Invalid input. Reservation for seat number %d has not been cancelled.\n", seat_number);
-    }
+
+
+    // Close the files and remove the old reservations file
+    fclose(fp);
+    fclose(temp);
+    remove("reservations.txt");
+
+    // Rename the temporary file to the original name
+    rename("temp.txt", "reservations.txt");
+    printf("Reservation canceled successfully.\n");
 }

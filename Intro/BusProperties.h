@@ -26,4 +26,4 @@ Reservation create_reservation(int bus_choice, Reservation reservations[]);
 void confirm_reservation(Reservation reservation);
 void display_reservation_details(Reservation reservation);
 void relocate_user(Reservation* reservations);
-void cancel_reservation(int seat_number, Reservation* reservations);
+void cancel_reservation(Reservation reservation);

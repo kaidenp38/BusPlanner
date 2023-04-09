@@ -39,6 +39,17 @@ int main() {
         else if (menuChoice == 3)
         {
             // code to cancel a seat.
+            Reservation cancel;
+            printf("Please enter the reservation details to cancel:\n");
+            printf("Bus Number: ");
+            scanf("%d", &cancel.bus_id);
+            printf("Seat number: ");
+            scanf("%d", &cancel.seat_number);
+            printf("Ticket ID: ");
+            scanf("%s", cancel.ticket_id);
+
+            cancel_reservation(cancel);
+
         }
         else if (menuChoice == 4)
         {
