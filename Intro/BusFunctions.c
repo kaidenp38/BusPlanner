@@ -67,17 +67,45 @@ void get_user_input(char name[], char phone_number[]) {
 }
 
 // E.L create reservation function
-Reservation create_reservation(int bus_choice, int seat_choice, char name[], char phone_number[], Reservation reservations[]) {
+Reservation create_reservation(int bus_choice, char* name, char* phone_number, Reservation* reservations) {
     Reservation reservation = {
         .bus_id = bus_choice,
     };
-    book_seat(reservations, bus_choice, seat_choice);
+    int i, seat_number;
+    printf("Enter 0 to choose a seat or 1 to have a random one assigned: ");
+    scanf("%d", &seat_number);
+    if (seat_number == 0) {
+        printf("Enter desired seat number: ");
+        scanf("%d", &seat_number);
+        if (seat_number < 1 || seat_number > MAX_SEATS) {
+            printf("Error: Invalid seat number.\n");
+            Reservation dummy_reservation = { 0 };
+            return dummy_reservation;
+        }
+        if (reservations[seat_number - 1].seat_number != 0) {
+            printf("Error: Seat is already taken.\n");
+            Reservation dummy_reservation = { 0 };
+            return dummy_reservation;
+        }
+    }
+    else {
+        srand(time(NULL));
+        do {
+            seat_number = rand() % MAX_SEATS + 1;
+        } while (reservations[seat_number - 1].seat_number != 0);
+        printf("Random seat number assigned: %d\n", seat_number);
+    }
+    reservation.seat_number = seat_number;
     generate_ticket_id(reservation.ticket_id);
     strcpy(reservation.name, name);
-    strcpy(reservation.phone_number, phone_number);
-    reservation.seat_number = seat_choice;
+    strcpy(reservation.phone_number, *phone_number);
+    confirm_reservation(reservation);
+    display_reservation_details(reservation);
+    reservations[seat_number - 1] = reservation;
     return reservation;
+
 }
+
 
 // E.L confirm reservation function
 void confirm_reservation(Reservation reservation) {
@@ -114,4 +142,29 @@ void relocate_user(Reservation* reservations) {
     reservations[from_seat - 1].seat_number = 0;
     to_reservation.seat_number = to_seat;
     printf("Seat reservation successfully changed.\n");
+}
+
+void cancel_reservation(int seat_number, Reservation* reservations) {
+    if (seat_number < 1 || seat_number > MAX_SEATS) {
+        printf("Error: Invalid seat number.\n");
+        return;
+    }
+    Reservation reservation = reservations[seat_number - 1];
+    if (reservation.seat_number == 0) {
+        printf("Error: Seat is not reserved.\n");
+        return;
+    }
+    printf("Are you sure you want to cancel the reservation for seat number %d? (Y/N): ", seat_number);
+    char confirmation;
+    scanf(" %c", &confirmation);
+    if (confirmation == 'Y' || confirmation == 'y') {
+        reservations[seat_number - 1].seat_number = 0;
+        printf("Reservation for seat number %d has been cancelled.\n", seat_number);
+    }
+    else if (confirmation == 'N' || confirmation == 'n') {
+        printf("Reservation for seat number %d has not been cancelled.\n", seat_number);
+    }
+    else {
+        printf("Invalid input. Reservation for seat number %d has not been cancelled.\n", seat_number);
+    }
 }
