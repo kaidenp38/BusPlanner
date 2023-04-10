@@ -156,25 +156,6 @@ void display_reservation_details(Reservation reservation)
     printf("Ticket ID: %s\n",reservation.ticket_id);
 }
 
-//A.N Relocate User Function
-//void relocate_user(Reservation* reservations) {
-//    int from_seat, to_seat;
-//    printf("Enter your current seat number: ");
-//    scanf("%d", &from_seat);
-//    printf("Enter the seat number you want to move to: ");
-//    scanf("%d", &to_seat);
-//    Reservation from_reservation = reservations[from_seat - 1];
-//    Reservation to_reservation = reservations[to_seat - 1];
-//    if (from_reservation.seat_number == 0 || to_reservation.seat_number != 0) {
-//        printf("Error: Invalid seat numbers.\n");
-//        return;
-//    }
-//    strcpy(to_reservation.name, from_reservation.name);
-//    strcpy(to_reservation.phone_number, from_reservation.phone_number);
-//    reservations[from_seat - 1].seat_number = 0;
-//    to_reservation.seat_number = to_seat;
-//    printf("Seat reservation successfully changed.\n");
-//}
 
 void cancel_reservation(Reservation reservation) {
     // Open the reservations file for reading and a temporary file for writing
